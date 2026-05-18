@@ -4478,14 +4478,17 @@ window.addEventListener('load', () => {
   for (let i = 0; i < NOISE_SIZE; i++) noiseGrid.push(srand());
 
   function smoothstep(t) { return t * t * (3 - 2 * t); }
+  function noiseAt(xi, yi) {
+    return noiseGrid[((xi & 255) + (((yi & 255) * 37) % NOISE_SIZE)) % NOISE_SIZE];
+  }
   function noise2D(x, y) {
     const xi = Math.floor(x), yi = Math.floor(y);
     const xf = x - xi, yf = y - yi;
     const u = smoothstep(xf), v = smoothstep(yf);
-    const a = noiseGrid[(xi & 255) + ((yi & 255) * 37) % NOISE_SIZE];
-    const b = noiseGrid[((xi + 1) & 255) + ((yi & 255) * 37) % NOISE_SIZE];
-    const c = noiseGrid[(xi & 255) + (((yi + 1) & 255) * 37) % NOISE_SIZE];
-    const d = noiseGrid[((xi + 1) & 255) + (((yi + 1) & 255) * 37) % NOISE_SIZE];
+    const a = noiseAt(xi, yi);
+    const b = noiseAt(xi + 1, yi);
+    const c = noiseAt(xi, yi + 1);
+    const d = noiseAt(xi + 1, yi + 1);
     return (a * (1 - u) * (1 - v) + b * u * (1 - v) + c * (1 - u) * v + d * u * v);
   }
 
