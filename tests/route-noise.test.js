@@ -48,6 +48,6 @@ ${noiseHelpers}
 `, context);
 
 for (const { x, y, actual, expected } of context.results) {
-  assert.ok(Number.isFinite(actual), \`noise2D(\${x}, \${y}) should remain finite\`);
-  assert.equal(actual, expected, \`noise2D(\${x}, \${y}) should use bounded grid indexes\`);
+  assert.ok(Number.isFinite(actual), `noise2D(${x}, ${y}) should remain finite`);
+  assert.equal(actual, expected, `noise2D(${x}, ${y}) should use bounded grid indexes`);
 }
