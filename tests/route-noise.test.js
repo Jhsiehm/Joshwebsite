@@ -11,9 +11,13 @@ assert(routeScriptMatch, 'route composition script should be present');
 
 const routeScript = routeScriptMatch[0];
 const noiseBlockMatch = routeScript.match(
-  /const noiseGrid = \[\];[\s\S]*?function flowAngle\(x, y, t\) \{[\s\S]*?\n  \}/
+  /const noiseGrid = \[\];[\s\S]*?function noise2D\(x, y\) \{[\s\S]*?\n  \}/
 );
 assert(noiseBlockMatch, 'route noise implementation should be present');
+const flowBlockMatch = routeScript.match(
+  /const SCALE_MACRO = 0\.003;[\s\S]*?function flowAngle\(x, y, t\) \{[\s\S]*?\n  \}/
+);
+assert(flowBlockMatch, 'route flow-angle implementation should be present');
 
 const context = {
   srand: (() => {
@@ -27,7 +31,10 @@ const context = {
 };
 
 vm.createContext(context);
-vm.runInContext(`${noiseBlockMatch[0]}; this.noise2D = noise2D; this.flowAngle = flowAngle;`, context);
+vm.runInContext(
+  `${noiseBlockMatch[0]}\n${flowBlockMatch[0]}; this.noise2D = noise2D; this.flowAngle = flowAngle;`,
+  context
+);
 
 function assertFiniteFlowForParticle(x, y) {
   const SCALE_MICRO = 0.012;
